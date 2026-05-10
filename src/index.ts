@@ -74,6 +74,13 @@ app.post("/api/search", async (req, res) => {
     res.json({ markdown: "未找到相关文档。" });
   }
 });
+
+// 终极测试接口：直接返回纯文本
+app.get("/test", async (req, res) => {
+  res.setHeader('Content-Type', 'text/plain; charset=utf-8');
+  res.send("这是一段纯文本测试。如果能看到这段话，说明平台链路彻底通了。");
+});
+
 // 新增一个全新的接口，专门配合新工具使用
 app.post("/api/v1/search", async (req, res) => {
   res.setHeader('Content-Type', 'application/json; charset=utf-8');
