@@ -60,6 +60,7 @@ app.get("/health", (req, res) => res.json({ status: "ok" }));
 
 app.post("/api/search", async (req, res) => {
   const result = await kb.search(req.body.query, req.body.limit);
+  // 关键：显式设置 Content-Type 为 JSON
   res.setHeader('Content-Type', 'application/json; charset=utf-8');
   
   if (result && result.length > 0) {
@@ -67,10 +68,10 @@ app.post("/api/search", async (req, res) => {
     for (const item of result) {
       textResponse += `标题：${item.title}\n内容：${item.content}\n\n`;
     }
-    // 将字段名改为 result
-    res.json({ result: textResponse }); 
+    // 关键修改：将字段名改为 markdown
+    res.json({ markdown: textResponse }); 
   } else {
-    res.json({ result: "未找到相关文档。" });
+    res.json({ markdown: "未找到相关文档。" });
   }
 });
 async function main() {
