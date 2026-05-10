@@ -60,16 +60,18 @@ app.get("/health", (req, res) => res.json({ status: "ok" }));
 
 app.post("/api/search", async (req, res) => {
   const result = await kb.search(req.body.query, req.body.limit);
-  res.setHeader('Content-Type', 'text/plain; charset=utf-8');
+  // 关键：显式设置 Content-Type 为 JSON
+  res.setHeader('Content-Type', 'application/json; charset=utf-8');
   
   if (result && result.length > 0) {
     let textResponse = "";
     for (const item of result) {
       textResponse += `标题：${item.title}\n内容：${item.content}\n\n`;
     }
-    res.send(textResponse); 
+    // 返回一个标准的 JSON 对象
+    res.json({ displayText: textResponse }); 
   } else {
-    res.send("未找到相关文档。");
+    res.json({ displayText: "未找到相关文档。" });
   }
 });
 async function main() {
