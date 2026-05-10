@@ -60,13 +60,14 @@ app.get("/health", (req, res) => res.json({ status: "ok" }));
 
 app.post("/api/search", async (req, res) => {
   const result = await kb.search(req.body.query, req.body.limit);
+  res.setHeader('Content-Type', 'text/plain; charset=utf-8');
+  
   if (result && result.length > 0) {
-    // 手动将 JSON 数据格式化为纯文本，方便小艺直接展示
     let textResponse = "";
     for (const item of result) {
       textResponse += `标题：${item.title}\n内容：${item.content}\n\n`;
     }
-    res.send(textResponse); // 使用 send 返回纯文本
+    res.send(textResponse); 
   } else {
     res.send("未找到相关文档。");
   }
