@@ -74,6 +74,13 @@ app.post("/api/search", async (req, res) => {
     res.json({ markdown: "未找到相关文档。" });
   }
 });
+// 新增一个全新的接口，专门配合新工具使用
+app.post("/api/v1/search", async (req, res) => {
+  res.setHeader('Content-Type', 'application/json; charset=utf-8');
+  // 这里直接返回固定的测试数据，先验证链路
+  const fixedResponse = "标题: HarmonyOS完美笔记\n内容: 这是一条100%能被搜索到的测试数据，证明整个链路已通。";
+  res.json({ markdown: fixedResponse });
+});
 async function main() {
   await kb.initialize();
   app.listen(3000, "0.0.0.0", () => console.log("MCP SSE Server: http://0.0.0.0:3000/sse"));
