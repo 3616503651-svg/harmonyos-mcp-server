@@ -68,10 +68,10 @@ app.post("/api/search", async (req, res) => {
     for (const item of result) {
       textResponse += `标题：${item.title}\n内容：${item.content}\n\n`;
     }
-    // 返回一个标准的 JSON 对象
-    res.json({ displayText: textResponse }); 
+    // 返回一个标准的 JSON 对象，字段名改为 output
+    res.json({ output: textResponse }); 
   } else {
-    res.json({ displayText: "未找到相关文档。" });
+    res.json({ output: "未找到相关文档。" });
   }
 });
 async function main() {
