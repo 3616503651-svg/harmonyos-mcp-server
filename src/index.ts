@@ -68,10 +68,25 @@ app.post("/api/search", async (req, res) => {
     for (const item of result) {
       textResponse += `标题：${item.title}\n内容：${item.content}\n\n`;
     }
-    // 关键修改：将字段名改为 markdown
-    res.json({ markdown: textResponse }); 
+    // 关键修改：始终使用 output 字段
+    res.json({ output: textResponse }); 
   } else {
-    res.json({ markdown: "未找到相关文档。" });
+    res.json({ output: "未找到相关文档。" });
+  }
+});
+
+// 新版接口，专门配合新工具使用，使用 output 字段
+app.post("/api/v1/search", async (req, res) => {
+  res.setHeader('Content-Type', 'application/json; charset=utf-8');
+  const result = await kb.search(req.body.query, req.body.limit);
+  if (result && result.length > 0) {
+    let textResponse = "";
+    for (const item of result) {
+      textResponse += `标题：${item.title}\n内容：${item.content}\n\n`;
+    }
+    res.json({ output: textResponse });
+  } else {
+    res.json({ output: "未找到相关文档。" });
   }
 });
 
@@ -81,22 +96,14 @@ app.get("/test", async (req, res) => {
   res.send("这是一段纯文本测试。如果能看到这段话，说明平台链路彻底通了。");
 });
 
-// 新增一个全新的接口，专门配合新工具使用
-app.post("/api/v1/search", async (req, res) => {
-  res.setHeader('Content-Type', 'application/json; charset=utf-8');
-  // 你之前的代码逻辑不变，只改字段名
-  const fixedResponse = "标题: HarmonyOS完美笔记\n内容: 这是一条100%能被搜索到的测试数据，证明整个链路已通。";
-  res.json({ output: fixedResponse }); // 字段名改成了 output
-});
-async function main() {
-  await kb.initialize();
-  app.listen(3000, "0.0.0.0", () => console.log("MCP SSE Server: http://0.0.0.0:3000/sse"));
-}
-main().catch(console.error);
-
-
 // 纯文本测试接口，不改任何参数，直接返回一句话
 app.get("/pure_test", async (req, res) => {
   res.setHeader('Content-Type', 'text/plain; charset=utf-8');
   res.send("如果能看到这句话，说明小艺平台能直接读取纯文本响应。");
 });
+
+async function main() {
+  await kb.initialize();
+  app.listen(3000, "0.0.0.0", () => console.log("MCP SSE Server: http://0.0.0.0:3000/sse"));
+}
+main().catch(console.error);
