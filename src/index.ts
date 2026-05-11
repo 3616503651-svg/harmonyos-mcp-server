@@ -93,3 +93,10 @@ async function main() {
   app.listen(3000, "0.0.0.0", () => console.log("MCP SSE Server: http://0.0.0.0:3000/sse"));
 }
 main().catch(console.error);
+
+
+// 纯文本测试接口，不改任何参数，直接返回一句话
+app.get("/pure_test", async (req, res) => {
+  res.setHeader('Content-Type', 'text/plain; charset=utf-8');
+  res.send("如果能看到这句话，说明小艺平台能直接读取纯文本响应。");
+});
